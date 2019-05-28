@@ -1,0 +1,15 @@
+{
+    "name": "phillmac/orbit-db-http-client",
+    "description": "A PHP client for the OrbitDB distributed peer-to-peer database HTTP API",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Phillip Mackintosh",
+            "email": "phillmackintosh@gmail.com"
+        }
+    ]
+}
