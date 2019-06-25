@@ -3,11 +3,7 @@ namespace OrbitdbClient;
 
 use DB;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHTTP\HandlerStack;
-use GuzzleHttp\Handler\Proxy;
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\Handler\StreamHandler;
-use GuzzleHttp\Handler\CurlMultiHandler;
+
 
 class OrbitDBAPI
 {
@@ -26,7 +22,6 @@ class OrbitDBAPI
         $this->debug        = $debug;
         $this->client       = new GuzzleClient(array_merge([
             'base_uri' =>  $base_uri,
-            'handler' =>  HandlerStack::create($this->choose_handler()),
             'timeout' => $timeout,
             'headers' => [
                 'Cache-Control' => 'no-cache'
@@ -99,26 +94,5 @@ class OrbitDBAPI
     public function db(string $db_name, array $db_options)
     {
         return DB($this->open_db($db_name, $db_options), $this->get_config());
-    }
-
-    private function choose_handler()
-    {
-        $handler = null;
-        if (function_exists('curl_multi_exec') && function_exists('curl_exec')) {
-            $handler = Proxy::wrapSync(new CurlMultiHandler(), new CurlHandler());
-        } elseif (function_exists('curl_exec')) {
-            $handler = new CurlHandler();
-        } elseif (function_exists('curl_multi_exec')) {
-            $handler = new CurlMultiHandler();
-        }
-        if (ini_get('allow_url_fopen')) {
-            $handler = $handler
-                ? Proxy::wrapStreaming($handler, new StreamHandler())
-                : new StreamHandler();
-        } elseif (!$handler) {
-            throw new \RuntimeException('GuzzleHttp requires cURL, the '
-                . 'allow_url_fopen ini setting, or a custom HTTP handler.');
-        }
-        return $handler;
     }
 }
