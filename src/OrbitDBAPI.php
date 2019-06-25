@@ -2,7 +2,7 @@
 namespace OrbitdbClient;
 
 use DB;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHTTP\HandlerStack;
 use GuzzleHttp\Handler\Proxy;
 use GuzzleHttp\Handler\CurlHandler;
@@ -24,7 +24,7 @@ class OrbitDBAPI
         $this->timeout      = $timeout;
         $this->useDBCache   = $useDBCache;
         $this->debug        = $debug;
-        $this->client       = new GuzzleHttp\Client(array_merge([
+        $this->client       = new GuzzleClient(array_merge([
             'base_uri' =>  $base_uri,
             'handler' =>  HandlerStack::create($this->choose_handler()),
             'timeout' => $timeout,
