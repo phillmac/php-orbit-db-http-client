@@ -92,8 +92,7 @@ class DB  {
 
     public function info() {
         $endpoint = join('/',['db', $this->id_safe]);
-        $call = $this->call;
-        return $call('GET', $endpoint);
+        return $this->call('GET', $endpoint);
     }
 
     public function get(string $item, bool $cache=null, bool $unpack=FALSE) {
