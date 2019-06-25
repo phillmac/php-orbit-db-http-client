@@ -1,7 +1,7 @@
 <?php
 namespace OrbitdbClient;
 
-use DB;
+use OrbitdbClient\DB as DB;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 
