@@ -12,7 +12,6 @@ class OrbitDBAPI
     private $timeout;
     private $useDBCache;
     private $debug;
-    private $curlMulti;
     private $client;
 
     public function __construct(string $base_uri, int $timeout=30, bool $useDBCache=false, array $guzzle_config=[], bool $debug=false)
