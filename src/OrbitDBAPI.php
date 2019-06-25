@@ -2,6 +2,7 @@
 namespace OrbitdbClient;
 
 use DB;
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 
 
