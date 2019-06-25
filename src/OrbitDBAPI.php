@@ -44,7 +44,7 @@ class OrbitDBAPI
 
     private function call_raw(string $method, string $endpoint, array $json=[], array $options=[])
     {
-        $url = [$this->base_uri, $endpoint].join('/');
+        $url = join('/', [$this->base_uri, $endpoint]);
         return $this->do_request($method, $endpoint, $json, $options);
     }
 
