@@ -1,6 +1,7 @@
 <?php
 namespace OrbitdbClient;
 
+use Exception;
 use function DeepCopy\deep_copy;
 use SseClient\EventStream as SseEventStream;
 
