@@ -87,14 +87,13 @@ class OrbitDBAPI
 
     public function open_db(string $db_name, array $db_options)
     {
-        $endpoint = ['db', urlencode($db_name)].join('/');
+        $endpoint = join('/',['db', urlencode($db_name)]);
         return $this->call('POST', $endpoint, $db_options);
     }
 
     public function db(string $db_name, array $db_options)
     {
         $db_params = $this->open_db($db_name, $db_options);
-        print_r($db_params);
         return new DB($db_params, $this->get_config());
     }
 }
