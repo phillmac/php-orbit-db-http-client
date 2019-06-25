@@ -31,12 +31,12 @@ class DB  {
         $this->id_safe          = urlencode($this->id);
         $this->dbname           = $params['dbname'];
         $this->type             = $params['type'];
-        $this->api_call             = $options['call'];
-        $this->api_call_raw         = $options['call_raw'];
+        $this->api_call         = $options['call'];
+        $this->api_call_raw     = $options['call_raw'];
         $this->base_url         = $options['base_url'];
         $this->use_cache        = $options['use_db_cache'];
         $this->enforce_caps     = $options['enforce_caps'];
-        $this->enforce_indexby = $options['enforce_indexby'];
+        $this->enforce_indexby  = $options['enforce_indexby'];
 
 
     }

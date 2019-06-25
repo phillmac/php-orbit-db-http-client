@@ -76,8 +76,13 @@ class OrbitDBAPI
             'useDBCache'    => $this->useDBCache,
             'debug'         => $this->debug,
             'client'        => $this->client,
-            'call'          => $this->call,
-            'call_raw'      => $this->call_raw
+            'call'          => function (string $method, string $endpoint, array $json=[], array $options=[])
+            {
+                $this->call($method, $endpoint, $json, $options);
+            },
+            'call_raw'      => function (string $method, string $endpoint, array $json=[], array $options=[]) {
+                $this->call_raw($method, $endpoint, $json, $options);
+            }
         );
     }
 
