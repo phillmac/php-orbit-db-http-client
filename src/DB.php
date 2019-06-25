@@ -94,7 +94,7 @@ class DB  {
 
     private function api_call_raw (string $method, string $endpoint, array $json=[], array $options=[]) {
         $func_call_raw = $this->func_call_raw;
-        return $func_call($method, $endpoint, $json, $options);
+        return $func_call_raw($method, $endpoint, $json, $options);
     }
 
     private function unpack_result($result) {
