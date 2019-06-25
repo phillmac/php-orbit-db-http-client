@@ -58,7 +58,7 @@ class OrbitDBAPI
         } if ($response)  {
             $response_contents = $response->getBody();
             try {
-                $result = json_decode($response_contents);
+                $result = json_decode($response_contents, TRUE);
                 assert(! is_null($response), new Exception('Empty json response body'));
                 return $result;
             } catch (Exception $e){
