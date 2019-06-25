@@ -15,8 +15,8 @@ class DB  {
     private $id_safe;
     private $dbname;
     private $type;
-    private $call;
-    private $call_raw;
+    private $api_call;
+    private $api_call_raw;
     private $base_url;
     private $use_cache;
     private $enforce_caps;
@@ -31,8 +31,8 @@ class DB  {
         $this->id_safe          = urlencode($this->id);
         $this->dbname           = $params['dbname'];
         $this->type             = $params['type'];
-        $this->call             = $options['call'];
-        $this->call_raw         = $options['call_raw'];
+        $this->api_call             = $options['call'];
+        $this->api_call_raw         = $options['call_raw'];
         $this->base_url         = $options['base_url'];
         $this->use_cache        = $options['use_db_cache'];
         $this->enforce_caps     = $options['enforce_caps'];
@@ -92,7 +92,7 @@ class DB  {
 
     public function info() {
         $endpoint = join('/',['db', $this->id_safe]);
-        return $this->call('GET', $endpoint);
+        return $this->api_call('GET', $endpoint);
     }
 
     public function get(string $item, bool $cache=null, bool $unpack=FALSE) {
@@ -106,7 +106,7 @@ class DB  {
             $result = $this->cache[$item];
         } else {
             $endpoint = join('/', 'db', $this->id_safe, $item);
-            $result = $this->call('GET', $endpoint);
+            $result = $this->api_call('GET', $endpoint);
             $this->cache[$item] = $result;
             if($unpack){
                 return $this->unpack_result($result);
@@ -146,7 +146,7 @@ class DB  {
             }
 
             $endpoint = join('/', db, $this->id_safe, 'put');
-            $entry_hash = $this->call('POST', $endpoint, $item)['hash'] ?? '';
+            $entry_hash = $this->api_call('POST', $endpoint, $item)['hash'] ?? '';
             if ($cache && $entry_hash){
                 $cache[$entry_hash] = $item;
             }
@@ -164,7 +164,7 @@ class DB  {
         }
 
         $endpoint = join('/', db, $this->id_safe, 'add');
-        $entry_hash = $this->call('POST', $endpoint, $item)['hash'] ?? '';
+        $entry_hash = $this->api_call('POST', $endpoint, $item)['hash'] ?? '';
         if ($cache && $entry_hash) {
             $cache[$entry_hash] = $item;
         }
@@ -177,7 +177,7 @@ class DB  {
         }
 
         $endpoint = join('/', 'db', $this->id_safe, 'rawiterator');
-        return $this->call('GET', $endpoint, $options);
+        return $this->api_call('GET', $endpoint, $options);
     }
 
     public function iterator (array $options) {
@@ -186,17 +186,17 @@ class DB  {
         }
 
         $endpoint = join('/', 'db', $this->id_safe, 'iterator');
-        return $this->call('GET', $endpoint, $options);
+        return $this->api_call('GET', $endpoint, $options);
     }
 
     public function index () {
         $endpoint = join('/', 'db', $this->id_safe, 'index');
-        return $this->call('GET', $endpoint, $options);
+        return $this->api_call('GET', $endpoint, $options);
     }
 
     public function all () {
         $endpoint = join('/', 'db', $this->id_safe, 'all');
-        $result =  $this->call('GET', $endpoint, $options);
+        $result =  $this->api_call('GET', $endpoint, $options);
         if(is_array($result)){
             $this->cache = $result;
         }
@@ -209,12 +209,12 @@ class DB  {
         }
 
         $endpoint = join('/', 'db', $this->id_safe, $item);
-        return $this->call('DELETE', $endpoint, $options);
+        return $this->api_call('DELETE', $endpoint, $options);
     }
 
     public function unload () {
         $endpoint = join('/', 'db', $this->id_safe);
-        return $this->call('DELETE', $endpoint, $options);
+        return $this->api_call('DELETE', $endpoint, $options);
     }
 
 
@@ -227,7 +227,7 @@ class DB  {
             $callback($event);
         });
 
-        $this->call_raw('GET' ,$endpoint, [
+        $this->api_call_raw('GET' ,$endpoint, [
             'sink' => $eventstream
         ]);
     }
