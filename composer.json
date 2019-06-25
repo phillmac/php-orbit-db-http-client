@@ -3,7 +3,14 @@
     "description": "A PHP client for the OrbitDB distributed peer-to-peer database HTTP API",
     "type": "library",
     "require": {
-        "guzzlehttp/guzzle": "^6.3"
+        "phillmac/sse-client": "^0.2.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "myclabs/deep-copy": "^1.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "OrbitdbClient\\": "src/"
+        }
     },
     "license": "MIT",
     "authors": [
@@ -11,5 +18,11 @@
             "name": "Phillip Mackintosh",
             "email": "phillmackintosh@gmail.com"
         }
-    ]
+    ],
+    "repositories": {
+        "phillmac.sse-client": {
+            "type": "git",
+            "url": "https://github.com/phillmac/php-sse-client.git"
+        }
+    }
 }

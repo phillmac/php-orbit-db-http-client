@@ -1,0 +1,124 @@
+<?php
+namespace OrbitdbClient;
+
+use DB;
+use GuzzleHttp\Client;
+use GuzzleHTTP\HandlerStack;
+use GuzzleHttp\Handler\Proxy;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\Handler\StreamHandler;
+use GuzzleHttp\Handler\CurlMultiHandler;
+
+class OrbitDBAPI
+{
+    private $base_uri;
+    private $timeout;
+    private $useDBCache;
+    private $debug;
+    private $curlMulti;
+    private $client;
+
+    public function __construct(string $base_uri, int $timeout=30, bool $useDBCache=false, array $guzzle_config=[], bool $debug=false)
+    {
+        $this->base_uri     = $base_uri;
+        $this->timeout      = $timeout;
+        $this->useDBCache   = $useDBCache;
+        $this->debug        = $debug;
+        $this->client       = new GuzzleHttp\Client(array_merge([
+            'base_uri' =>  $base_uri,
+            'handler' =>  HandlerStack::create($this->choose_handler()),
+            'timeout' => $timeout,
+            'headers' => [
+                'Cache-Control' => 'no-cache'
+            ],
+            'curl' => [
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2TLS,
+            ],
+        ], $guzzle_config));
+    }
+
+    private function do_request(string $method, string $url, array $json=[], array $options=[])
+    {
+        return $this->client->request($method, $url, array_merge([
+                'json' => $json,
+                'connect_timeout' => $this->timeout,
+                'debug' => $this->debug
+            ], $options)
+        );
+    }
+
+    private function call_raw(string $method, string $endpoint, array $json=[], array $options=[])
+    {
+        $url = [$this->base_uri, $endpoint].join('/');
+        return $this->do_request($method, $endpoint, $json, $options);
+    }
+
+    private function call(string $method, string $endpoint, array $json=[], array $options=[])
+    {
+        $response = null;
+        try {
+            $response = $this->call_raw($method, $endpoint, $json, $options);
+        } catch (Exception $e){
+            trigger_error("Exception in request: $e", E_USER_WARNING);
+        } if ($response)  {
+            $response_contents = $response->getBody();
+            try {
+                $result = json_decode($response_contents->getBody());
+                assert(! isnull($response), new Exception('Empty json response body'));
+                return $result;
+            } catch (Exception $e){
+                trigger_error("Exception in json decode: $e", E_USER_WARNING);
+            }
+        }
+
+    }
+
+    private function get_config()
+    {
+        return array(
+            'base_uri'      => $this->base_uri,
+            'timeout'       => $this->timeout,
+            'useDBCache'  => $this->useDBCache,
+            'debug'         => $this->debug,
+            'client'        => $this->client,
+            'call'          => $this->call,
+            'call_raw'      => $this->call_raw
+        );
+    }
+
+    public function list_dbs() {
+        return $this->call('GET', 'dbs');
+    }
+
+    public function open_db(string $db_name, array $db_options)
+    {
+        $endpoint = ['db', urlencode($db_name)].join('/');
+        return $this->call('POST', $endpoint, $db_options);
+    }
+
+    public function db(string $db_name, array $db_options)
+    {
+        return DB($this->open_db($db_name, $db_options), $this->get_config());
+    }
+
+    private function choose_handler()
+    {
+        $handler = null;
+        if (function_exists('curl_multi_exec') && function_exists('curl_exec')) {
+            $handler = Proxy::wrapSync(new CurlMultiHandler(), new CurlHandler());
+        } elseif (function_exists('curl_exec')) {
+            $handler = new CurlHandler();
+        } elseif (function_exists('curl_multi_exec')) {
+            $handler = new CurlMultiHandler();
+        }
+        if (ini_get('allow_url_fopen')) {
+            $handler = $handler
+                ? Proxy::wrapStreaming($handler, new StreamHandler())
+                : new StreamHandler();
+        } elseif (!$handler) {
+            throw new \RuntimeException('GuzzleHttp requires cURL, the '
+                . 'allow_url_fopen ini setting, or a custom HTTP handler.');
+        }
+        return $handler;
+    }
+}
