@@ -15,8 +15,8 @@ class DB  {
     private $id_safe;
     private $dbname;
     private $type;
-    private $api_call;
-    private $api_call_raw;
+    private $func_call;
+    private $func_call_raw;
     private $base_url;
     private $use_cache;
     private $enforce_caps;
@@ -31,8 +31,8 @@ class DB  {
         $this->id_safe          = urlencode($this->id);
         $this->dbname           = $params['dbname'];
         $this->type             = $params['type'];
-        $this->api_call         = $options['call'];
-        $this->api_call_raw     = $options['call_raw'];
+        $this->func_call         = $options['call'];
+        $this->func_call_raw     = $options['call_raw'];
         $this->base_url         = $options['base_url'];
         $this->use_cache        = $options['use_db_cache'];
         $this->enforce_caps     = $options['enforce_caps'];
@@ -84,6 +84,17 @@ class DB  {
             default:
                 return $this->$name ?? null;
         }
+    }
+
+    private function api_call (string $method, string $endpoint, array $json=[], array $options=[]) {
+        $func_call = $this->func_call;
+        return $func_call($method, $endpoint, $json, $options);
+    }
+
+
+    private function api_call_raw (string $method, string $endpoint, array $json=[], array $options=[]) {
+        $func_call_raw = $this->func_call_raw;
+        return $func_call($method, $endpoint, $json, $options);
     }
 
     private function unpack_result($result) {
