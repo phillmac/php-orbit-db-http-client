@@ -73,7 +73,7 @@ class OrbitDBAPI
         return array(
             'base_uri'      => $this->base_uri,
             'timeout'       => $this->timeout,
-            'useDBCache'  => $this->useDBCache,
+            'useDBCache'    => $this->useDBCache,
             'debug'         => $this->debug,
             'client'        => $this->client,
             'call'          => $this->call,
