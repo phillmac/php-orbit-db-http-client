@@ -94,6 +94,6 @@ class OrbitDBAPI
 
     public function db(string $db_name, array $db_options)
     {
-        return DB($this->open_db($db_name, $db_options), $this->get_config());
+        return new DB($this->open_db($db_name, $db_options), $this->get_config());
     }
 }
