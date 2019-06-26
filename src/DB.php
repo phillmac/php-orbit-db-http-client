@@ -202,12 +202,12 @@ class DB  {
 
     public function index () {
         $endpoint = join('/', ['db', $this->id_safe, 'index']);
-        return $this->api_call('GET', $endpoint, $options);
+        return $this->api_call('GET', $endpoint);
     }
 
     public function all () {
         $endpoint = join('/', ['db', $this->id_safe, 'all']);
-        $result =  $this->api_call('GET', $endpoint, $options);
+        $result =  $this->api_call('GET', $endpoint);
         if(is_array($result)){
             $this->cache = $result;
         }
@@ -220,12 +220,12 @@ class DB  {
         }
 
         $endpoint = join('/', ['db', $this->id_safe, $item]);
-        return $this->api_call('DELETE', $endpoint, $options);
+        return $this->api_call('DELETE', $endpoint);
     }
 
     public function unload () {
         $endpoint = join('/', ['db', $this->id_safe]);
-        return $this->api_call('DELETE', $endpoint, $options);
+        return $this->api_call('DELETE', $endpoint);
     }
 
 
