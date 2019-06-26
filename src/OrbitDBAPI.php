@@ -60,7 +60,6 @@ class OrbitDBAPI
             try {
                 $result = json_decode($response_contents, TRUE);
                 assert(! is_null($response), new Exception('Empty json response body'));
-                var_dump($result);
                 return $result;
             } catch (Exception $e){
                 trigger_error("Exception in json decode: $e", E_USER_WARNING);
