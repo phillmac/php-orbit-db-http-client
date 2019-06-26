@@ -116,7 +116,7 @@ class DB  {
         if ($cache && in_array($item, $cache)) {
             $result = $this->cache[$item];
         } else {
-            $endpoint = join('/', 'db', $this->id_safe, $item);
+            $endpoint = join('/', ['db', $this->id_safe, $item]);
             $result = $this->api_call('GET', $endpoint);
             $this->cache[$item] = $result;
             if($unpack){
@@ -156,7 +156,7 @@ class DB  {
                 $this->cache[$index_val] = $item;
             }
 
-            $endpoint = join('/', db, $this->id_safe, 'put');
+            $endpoint = join('/', [db, $this->id_safe, 'put']);
             $entry_hash = $this->api_call('POST', $endpoint, $item)['hash'] ?? '';
             if ($cache && $entry_hash){
                 $cache[$entry_hash] = $item;
@@ -174,7 +174,7 @@ class DB  {
             $cache = $this->use_cache;
         }
 
-        $endpoint = join('/', db, $this->id_safe, 'add');
+        $endpoint = join('/', [db, $this->id_safe, 'add']);
         $entry_hash = $this->api_call('POST', $endpoint, $item)['hash'] ?? '';
         if ($cache && $entry_hash) {
             $cache[$entry_hash] = $item;
@@ -187,7 +187,7 @@ class DB  {
             throw new CapabilityError("Db {$this->dbname} does not have iterator capability");
         }
 
-        $endpoint = join('/', 'db', $this->id_safe, 'rawiterator');
+        $endpoint = join('/', ['db', $this->id_safe, 'rawiterator']);
         return $this->api_call('GET', $endpoint, $options);
     }
 
@@ -196,17 +196,17 @@ class DB  {
             throw new CapabilityError("Db {$this->dbname} does not have iterator capability");
         }
 
-        $endpoint = join('/', 'db', $this->id_safe, 'iterator');
+        $endpoint = join('/', ['db', $this->id_safe, 'iterator']);
         return $this->api_call('GET', $endpoint, $options);
     }
 
     public function index () {
-        $endpoint = join('/', 'db', $this->id_safe, 'index');
+        $endpoint = join('/', ['db', $this->id_safe, 'index']);
         return $this->api_call('GET', $endpoint, $options);
     }
 
     public function all () {
-        $endpoint = join('/', 'db', $this->id_safe, 'all');
+        $endpoint = join('/', ['db', $this->id_safe, 'all']);
         $result =  $this->api_call('GET', $endpoint, $options);
         if(is_array($result)){
             $this->cache = $result;
@@ -219,12 +219,12 @@ class DB  {
             throw new CapabilityError("Db {$this->dbname} does not have remove capability");
         }
 
-        $endpoint = join('/', 'db', $this->id_safe, $item);
+        $endpoint = join('/', ['db', $this->id_safe, $item]);
         return $this->api_call('DELETE', $endpoint, $options);
     }
 
     public function unload () {
-        $endpoint = join('/', 'db', $this->id_safe);
+        $endpoint = join('/', ['db', $this->id_safe]);
         return $this->api_call('DELETE', $endpoint, $options);
     }
 
