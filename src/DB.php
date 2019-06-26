@@ -88,8 +88,6 @@ class DB  {
 
     private function api_call (string $method, string $endpoint, array $json=[], array $options=[]) {
         $func_call = $this->func_call;
-        var_dump($func_call);
-        var_dump($method, $endpoint, $json, $options);
         return $func_call($method, $endpoint, $json, $options);
     }
 
