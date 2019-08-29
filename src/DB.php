@@ -174,7 +174,7 @@ class DB  {
             $cache = $this->use_cache;
         }
 
-        $endpoint = join('/', [db, $this->id_safe, 'add']);
+        $endpoint = join('/', ['db', $this->id_safe, 'add']);
         $entry_hash = $this->api_call('POST', $endpoint, $item)['hash'] ?? '';
         if ($cache && $entry_hash) {
             $cache[$entry_hash] = $item;
